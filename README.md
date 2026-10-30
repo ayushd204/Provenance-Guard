@@ -39,7 +39,26 @@
 <!-- The path a submission takes, from arriving to the label a reader sees.
      Six or seven steps — this is the trace you wrote in Milestone 1. -->
 
+1. The caller sends text as JSON to `POST /submit`, along with a
+   `creator_id` so the submission can be associated with its writer.
+2. Flask receives the request in `app.py` and reads the JSON payload. The
+   route should check that the text is present and usable before scoring it.
+3. The model signal in `detector.py` tokenizes the text and asks the local
+   GPT-2 model how predictable it is. It adds a `model_score` from 0 to 1;
+   higher means more AI-like according to this model.
+4. The style signal in `stylometry.py` measures sentence-length variation,
+   vocabulary repetition, and punctuation patterns. It adds a `style_score`
+   from 0 to 1, also intended to run higher for more AI-like style.
+5. The scoring rule in `scoring.py` combines the two signal scores into a
+   `combined_score`. It should also turn that score into a guess and confidence
+   according to the project's scoring contract.
+6. The label step maps the combined score to one of three reader-facing
+   outcomes: high-confidence human, unsure, or high-confidence AI.
+7. The service records and returns the decision. `audit.py` appends the
+   scores and label to the audit log; Flask returns a JSON response containing
+   the result for the caller to show the writer.
 
+This has to be the intended end-to-end flow.
 
 ---
 
@@ -54,18 +73,42 @@
 ### Signal one — the model signal
 
 **What it measures:**
+It understands the text as a whole ; in terms of its meaning.
 
 **Why that might differ between human and AI writing:**
+Humans do not tend to use complex vocabularies and use wide range of words but is simple in terms of semantics unless a professional writer is working on it. AI generated responses could have higher/complex vocabulary.
 
 **What it can't see:**
+
+It cannot tell who wrote the text or why it was written. It measures how
+surprising the words are to GPT-2, not authorship. Plain, conventional human
+writing can be predictable and receive an AI-like score; unusual or ornate AI
+writing can surprise the model and receive a more human-like score. The result
+also depends on the model, topic, and text length.
 
 ### Signal two — the style signal
 
 **What it measures:**
 
+The planned `stylometry.py` signal measures surface patterns in the text:
+variation in sentence lengths, the ratio of unique words to total words, and
+punctuation density. These measurements are combined into a 0–1 `style_score`,
+with higher intended to mean more AI-like. 
+
 **Why that might differ between human and AI writing:**
 
+Generated prose can settle into similar, mid-length sentences and reuse a
+narrower range of vocabulary. Human writing often varies more ; a short sentence
+may sit beside a long one, and word choice and punctuation may be less even.
+These are tendencies, not reliable rules about authorship though.
+
 **What it can't see:**
+
+It cannot understand the meaning, truth, context, or authorship of the text.
+It only sees measurable form. Editing sentence breaks, adding typos, changing
+punctuation, or including a quotation can shift those measurements without
+changing who wrote the underlying ideas. Short texts and changes in length can
+also distort measures such as type-token ratio.
 
 ### The combining rule
 
