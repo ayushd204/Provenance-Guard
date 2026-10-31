@@ -150,6 +150,8 @@ def health():
 
 # ── YOU BUILD THIS ────────────────────────────────────────────────────────────
 
+from detector import model_signal
+
 @app.post("/submit")
 # @limiter.limit(f"{config.RATE_LIMIT_PER_MINUTE}/minute;{config.RATE_LIMIT_PER_DAY}/day")
 def submit():
@@ -199,17 +201,40 @@ def submit():
     what should this do when `text` is missing, empty, or enormous? A crash on
     a malformed input is one of the most common real failures there is.
     """
-    payload = request.get_json(silent=True) or {}
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        return jsonify({"error": "Expected a JSON object."}), 400
 
-    # TODO: delete this and build the route.
+    text = payload.get("text")
+    creator_id = payload.get("creator_id")
+    if not isinstance(text, str) or not text.strip():
+        return jsonify({"error": "text must be a non-empty string."}), 400
+    if not isinstance(creator_id, str) or not creator_id.strip():
+        return jsonify({"error": "creator_id must be a non-empty string."}), 400
+    if len(text.strip()) <= 10:
+        return jsonify({"error": "text must contain more than 10 characters."}), 400
+
+    content_id = str(uuid.uuid4())
+    model_score = model_signal(text)
+    guess = "undecided"
+    confidence = 0.0
+    label = "pending"
+
+    audit.log_decision(
+        content_id=content_id,
+        creator_id=creator_id,
+        guess=guess,
+        model_score=model_score,
+        status="decided",
+    )
+
     return jsonify({
-        "error": "not_implemented",
-        "message": "POST /submit isn't built yet — see the TODO in app.py.",
-        "you_sent": {
-            "text_length": len(payload.get("text", "")),
-            "creator_id": payload.get("creator_id"),
-        },
-    }), 501
+        "content_id": content_id,
+        "guess": guess,
+        "confidence": confidence,
+        "label": label,
+        "model_score": model_score,
+    }), 200
 
 
 @app.post("/appeal")
