@@ -56,10 +56,11 @@ def combine_signals(model_score: float, style_score: float) -> float:
     if total_weight <= 0:
         raise ValueError("Signal weights must sum to a positive value.")
 
-    return (
+    weighted_score = (
         config.WEIGHT_MODEL_SIGNAL * model_score
         + config.WEIGHT_STYLE_SIGNAL * style_score
     ) / total_weight
+    return round(weighted_score, 2)
 
 
 def score_to_label(score: float) -> tuple[str, str]:
@@ -88,12 +89,14 @@ def score_to_label(score: float) -> tuple[str, str]:
     think if they got it on their own work. That question is the whole
     milestone.
     """
-    # TODO: replace this — thresholds are in config.py
+    # Classification uses hundredth-step scores so the configured bands meet
+    # without leaving gaps between 0.49/0.50 or 0.65/0.66.
+    score = round(score, 2)
     if score >= config.AI_THRESHOLD:
-        return "ai", "PLACEHOLDER — write the high-confidence AI label."
+        return "ai", "We think this was written by an AI."
     if score <= config.HUMAN_THRESHOLD:
-        return "human", "PLACEHOLDER — write the high-confidence human label."
-    return "unsure", "PLACEHOLDER — write the unsure label."
+        return "human", "We think this was written by a person."
+    return "unsure", "We can't tell whether this was written by a person or an AI."
 
 
 def label_ranges() -> list[tuple[str, str]]:
@@ -102,7 +105,10 @@ def label_ranges() -> list[tuple[str, str]]:
     label text — given to you so the numbers can't drift apart from config.py.
     """
     return [
-        ("high-confidence human", f"0.00 – {config.HUMAN_THRESHOLD:.2f}"),
-        ("unsure", f"{config.HUMAN_THRESHOLD:.2f} – {config.AI_THRESHOLD:.2f}"),
-        ("high-confidence AI", f"{config.AI_THRESHOLD:.2f} – 1.00"),
+        ("high-confidence human", f"0.00 – {config.HUMAN_THRESHOLD:.2f} (inclusive)"),
+        (
+            "unsure",
+            f"{config.HUMAN_THRESHOLD + 0.01:.2f} – {config.AI_THRESHOLD - 0.01:.2f}",
+        ),
+        ("high-confidence AI", f"{config.AI_THRESHOLD:.2f} – 1.00 (inclusive)"),
     ]
