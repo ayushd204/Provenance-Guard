@@ -115,16 +115,22 @@ also distort measures such as type-token ratio.
 <!-- Write the rule in words, then give the numbers. What happens when the two
      signals disagree? -->
 
-**The rule:**
+**The rule:** I average the model and style scores using equal weights. When
+they disagree, the combined score lands between them; a strong disagreement
+therefore pulls the result toward the unsure range instead of letting either
+signal decide on its own.
 
-**The numbers:**
+**The numbers:** `model_score` weight = 0.50, `style_score` weight = 0.50.
+The label thresholds are `HUMAN_THRESHOLD = 0.35` and `AI_THRESHOLD = 0.65`.
 
 **Where it lives:** `scoring.py::combine_signals`
 
 <!-- ⚠️ The grader checks your code against that line. If your rule lives
      somewhere else, say where. -->
 
-**A case where my two signals split, and what my rule does with it:**
+**A case where my two signals split, and what my rule does with it:** If the
+model score is 0.90 and the style score is 0.10, the weighted average is 0.50.
+That is between 0.35 and 0.65, so the result is unsure.
 
 
 

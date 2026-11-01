@@ -52,11 +52,14 @@ def combine_signals(model_score: float, style_score: float) -> float:
     The weights in config.py are placeholders. Change them, or ignore them and
     write a different rule.
     """
-    # TODO: replace this
+    total_weight = config.WEIGHT_MODEL_SIGNAL + config.WEIGHT_STYLE_SIGNAL
+    if total_weight <= 0:
+        raise ValueError("Signal weights must sum to a positive value.")
+
     return (
         config.WEIGHT_MODEL_SIGNAL * model_score
         + config.WEIGHT_STYLE_SIGNAL * style_score
-    )
+    ) / total_weight
 
 
 def score_to_label(score: float) -> tuple[str, str]:
