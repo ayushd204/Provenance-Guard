@@ -240,7 +240,7 @@ RESPONSE:
 
 ## Rate Limiting
 
-**My limits:** ___ per minute, ___ per day
+**My limits:** 7 per minute, 150 per day
 
 **Why those numbers and not others:**
 <!-- Think about two people: a real writer submitting their own work a few
