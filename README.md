@@ -744,30 +744,67 @@ not produce the requested label or log change.
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** In `app.py::submit`, I added a 100,000-character
+maximum for `text`. Longer submissions now receive HTTP 413 with a JSON
+`error` before either scoring signal runs.
 
-**Which diagnosis pointed at it:**
+**Which diagnosis pointed at it:** Criterion 4 missed because its
+100,001-character input reached the scoring route and returned HTTP 200. The
+diagnosed stage was the route; the mechanism was the missing upper-length
+validation.
 
 ### Attack Run — After
 
 <!-- Same format. `run_attacks.py --label after` -->
 
-**Did it help, and how do I know:**
+Results from `results/attack_run_2026-11-05_0011_after.md`, produced by `run_attacks.py::main` against `app.py::submit`. 
 
-<!-- Widening the unsure band usually fixes one problem and creates another.
-     Reporting that trade honestly is worth full credit. -->
+| ID | Family | Targeting | Status | Content ID | Guess | Score | Verdict |
+|---|---|---|---|---|---|---|---|
+| EV01 | evasion | signal two: typos raise word variety | 200 | `c5323eda-1301-4dad-b2c6-09aee2338894` | human | 0.200 | BROKE |
+| EV02 | evasion | signal two: broken-up sentences raise length spread | 200 | `e5966dfb-61ff-4b90-878b-af9382e1e0ac` | unsure | 0.080 | BROKE |
+| EV03 | evasion | signal two: a pasted quotation changes the shape | 200 | `54c8ae4b-0db3-458f-862e-7e951f5d59c4` | unsure | 0.220 | BROKE |
+00 | `94858736-8ea3-4486-8c9d-230722cd054d` | ai | 0.420 | BROKE |
+| FP05 | false_positive | technical documentation written by a person | 200 | `fce50ead-0979-48d4-911b-1dc7ddfc09f1` | ai | 0.480 | BROKE |
+| FP06 | false_positive | a person imitating a formal template | 200 | `f5579634-f36b-4dcb-bef8-4fd090bfbc3c` | ai | 0.460 | BROKE |
+| FP07 | false_positive | human writing that repeats a phrase deliberately | 200 | `4fc402d9-fbe5-4ce8-8016-b92aab6943e5` | ai | 0.500 | BROKE |
+| FP08 | false_positive | very short genuine human submission | 200 | `32b0a1c3-04a2-4932-a5b0-f21940cc085a` | human | 0.300 | HELD |
+| PI01 | prompt_injection | instruction to ignore the check | 200 | `80289ef0-5efc-4342-8187-407acd7d22c4` | human | 0.040 | BROKE |
+| PI02 | prompt_injection | instruction disguised as a system message | 200 | `f15edfc8-1f9d-4269-bb67-9a5a8c02c4b7` | human | 0.320 | BROKE |
+| PI03 | prompt_injection | instruction wrapped in the writer's voice | 200 | `5b0f27be-25c0-4cb9-a80f-9d8337f3cba8` | unsure | 0.160 | HELD |
+| PI04 | prompt_injection | attempt to make the label text hostile | 200 | 
+| MF05 | malformed | text is a very long single word | 200 | `946fb3f7-a4ec-4e4d-a531-bbfecab7f5b7` | ai | 0.660 | BROKE |
+| MF06 | malformed | text is emoji only | 200 | `c1d5d2c5-65c4-4073-8f75-c5bf076ca4c1` | unsure | 0.000 | BROKE |
+| MF07 | malformed | text is right-to-left script | 200 | `a7057361-aefa-4d8e-8c3c-2cbc96602ed5` | human | 0.100 | BROKE |
+| MF08 | malformed | text is 60,000 characters | 200 | `04a6abfd-288c-436e-8df8-0bbeb12e5d03` | ai | 0.820 | HELD |
+| RQ01 | malformed | no text field at all | 400 | `—` | — | — | HELD |
+| RQ02 | malformed | no creator_id | 400 | `—` | — | — | HELD |
+| RQ03 | malformed | text is a number | 400 | `—` | — | — | HELD |
+| RQ04 | malformed | text is a list | 400 | `—` | — | — | HELD |
+| RQ05 | malformed | text is null | 400 | `—` | — | — | HELD |
+| RQ06 | malformed | creator_id is an object | 400 | `—` | — | — | HELD |
+| RQ07 | malformed | body is a JSON array, not an object | 400 | `—` | — | — | HELD |
+
+**Did it help, and how do I know:** The code now rejects text longer than 100,000 characters with HTTP 413 before scoring. This attack run does not include such an input, and its 60,000-character request correctly remains below the cap. Rerun criterion 4 with the 100,001-character scenario to confirm the change; no measured after result is available from this report.
 
 ---
 
 ## What's Still Broken
 
-<!-- For each attack still getting through and each criterion still missed:
-     what you'd do, and why you stopped. -->
+The after run still has evasion attacks EV01–EV09 landing in the human or
+unsure bands, and false-positive attacks FP02–FP07 labeled high-confidence AI.
+PI01 and PI02 also received human labels, while malformed submissions MF03–MF07
+were accepted and classified. The signals and equal-weight combining rule still
+confuse predictable, regular human writing with generated text and can treat
+surface edits as evidence of human authorship. The next change should focus on
+reducing those classification errors; the after report does not retest the
+separation criterion or the appeal path. Criterion 4's over-limit behavior also
+needs a direct rerun with its 100,001-character case.
 
-**The trade I'd make if this ran for real:**
-
-<!-- Two sentences. Fewer wrong accusations means more AI text getting through.
-     Say which way you'd go and WHO PAYS FOR IT. -->
+**The trade I'd make if this ran for real:** I would favor fewer high-confidence
+accusations by widening the unsure band after measuring a suitable cutoff.
+That would let more AI-written text avoid an AI label, so the site would bear
+more missed detections while writers would face fewer unsupported accusations.
 
 <!-- ═════════════════════════════════════════════════════════════════════
 

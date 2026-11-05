@@ -211,6 +211,8 @@ def submit():
     creator_id = payload.get("creator_id")
     if not isinstance(text, str) or not text.strip():
         return jsonify({"error": "text must be a non-empty string."}), 400
+    if len(text) > 100_000:
+        return jsonify({"error": "text must not exceed 100,000 characters."}), 413
     if not isinstance(creator_id, str) or not creator_id.strip():
         return jsonify({"error": "creator_id must be a non-empty string."}), 400
     if len(text.strip()) <= 10:
