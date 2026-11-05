@@ -30,8 +30,16 @@ SCENARIOS = [
         # things you actually wrote. This is the criterion that matters most and
         # it's meaningless with someone else's prose.
         "texts": [
-            "REPLACE ME with a paragraph you wrote yourself.",
-            "REPLACE ME with another one. Ten pieces is the usual number.",
+            "A wrong accusation can harm a real writer, so I want a low false-positive rate even if that means some AI writing lands in the unsure band.",
+            "Repeating the same ten pieces checks that small score variations do not keep flipping human work into an accusation.",
+            "The unsure label gives the system a way to express doubt without making an accusation.",
+            "Requiring all three outcomes to be reachable checks that the thresholds and scores are not effectively collapsing into one label.",
+            "A writer needs a dependable way to challenge a decision.",
+            "Checking both the response and the append-only log makes the outcome visible and traceable.",
+            "Malformed requests should get a clear client error rather than a server crash, and a fixed size limit prevents an unexpectedly large submission from consuming unbounded time or memory.",
+            "The status and response field make each case straightforward to check.",
+            "The system should show measurable separation on examples whose origins are known, while the 0.20 margin avoids treating a tiny average difference as useful.",
+            "This is a calibration check, not proof that any individual score establishes authorship.",
         ],
     },
     {
@@ -40,31 +48,50 @@ SCENARIOS = [
         # Inputs spread across your score range, so you can check all three
         # labels are actually reachable.
         "texts": [
-            "REPLACE ME with something you're confident is AI-generated.",
-            "REPLACE ME with something you're confident is human-written.",
-            "REPLACE ME with something genuinely borderline.",
+            "I left my keys beside the chipped blue mug, then spent ten minutes looking for them. The rain had stopped, but the window still clicked in the wind.",
+            "The bus was late again, and nobody at the stop seemed surprised. I checked the time, put my phone away, and watched a dog pull its owner toward the bakery.",
+            "I have a confirmit survey where i have BG fields S_state_fips, S_state , respemail variables. My survey page gets email and State (dropdown field) from the respondent and i want to validate the combination on respondentdata",
+            "The old notebook has a grocery list on one page and a half-finished idea on the next. I keep it because both are useful in different ways.",
+            "In today's rapidly evolving digital landscape, it is crucial to leverage innovative, cutting-edge solutions to unlock new opportunities, foster meaningful connections, and drive impactful outcomes. By harnessing the power of technology, we can navigate complex challenges and build a brighter future.",
+            "This comprehensive overview explores the essential components of effective communication. By embracing clarity, consistency, and collaboration, organizations can empower teams, strengthen relationships, and achieve sustainable success in an increasingly dynamic environment.",
         ],
     },
-    # A bad-input criterion looks like this. Uncomment and adjust if that's one
-    # of your five — these are raw request bodies, sent exactly as written.
-    #
-    # {
-    #     "name": "bad input",
-    #     "criterion": 3,
-    #     "bodies": [
-    #         {"text": "", "creator_id": "eval_bad_empty"},
-    #         {"creator_id": "eval_bad_missing"},          # no text field at all
-    #         {"text": "word " * 50000, "creator_id": "eval_bad_huge"},
-    #         {"text": None, "creator_id": "eval_bad_null"},
-    #     ],
-    # },
-
-    # TODO: add what your remaining criteria need.
-    #
-    # A criterion about the appeal path can't be tested by sending text alone;
-    # it needs a submission first and then an appeal against the content_id
-    # that came back. You'll need to test that one by hand, or extend this file
-    # and run_eval.py to do it. Saying which you did is part of the write-up.
+    {
+        "name": "appeal path seed submission (appeal by hand)",
+        "criterion": 3,
+        # Submit this first, then appeal the returned content_id manually.
+        "texts": [
+            "I wrote this short note myself and want the decision reviewed. The point is to verify that a real submission can be appealed and recorded.",
+        ],
+    },
+    {
+        "name": "bad input",
+        "criterion": 4,
+        "bodies": [
+            {"text": "", "creator_id": "eval_bad_empty"},
+            {"creator_id": "eval_bad_missing"},
+            {"text": None, "creator_id": "eval_bad_null"},
+            {"text": 42, "creator_id": "eval_bad_non_string"},
+            {"text": "x" * 100001, "creator_id": "eval_bad_huge"},
+        ],
+    },
+    {
+        "name": "human and AI score separation",
+        "criterion": 5,
+        # First five are human-origin; last five are AI-generated.
+        "texts": [
+            "I missed the first bus, so I walked to the next stop. It was colder than I expected, and I wished I had brought gloves.",
+            "The cabinet door still sticks unless you lift it a little. Dad said he would fix it last weekend, but we both forgot.",
+            "I tried the new recipe on Tuesday and added too much lemon. It was still edible, though my roommate laughed when I made a face.",
+            "There is a tiny crack in the corner of my phone screen. I keep meaning to get it repaired, then remember only when the light catches it.",
+            "We moved the table closer to the window because the room felt dark. Now the plants seem happier, and there is less space to walk past.",
+            "In today's rapidly evolving digital landscape, organizations must embrace innovative solutions to unlock their full potential. By leveraging advanced technologies and fostering collaboration, teams can drive meaningful outcomes and build a sustainable future.",
+            "Effective communication is essential for success in any environment. By prioritizing clarity, consistency, and collaboration, individuals can strengthen relationships, overcome challenges, and achieve shared goals.",
+            "This comprehensive guide explores the key principles of personal growth. Through dedication, resilience, and a commitment to continuous learning, anyone can develop the skills needed to thrive in an ever-changing world.",
+            "Technology continues to transform the way we live and work. By embracing emerging tools and adapting to new opportunities, communities can create a more connected, efficient, and inclusive future.",
+            "Achieving long-term success requires a thoughtful approach. By setting clear objectives, building strong habits, and remaining open to feedback, individuals can make steady progress toward their aspirations.",
+        ],
+    },
 ]
 
 

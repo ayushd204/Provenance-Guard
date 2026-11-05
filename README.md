@@ -191,7 +191,7 @@ RESPONSE:
 "style_score": 0.6345
 }
 
-```
+
 
 **An appeal**
 
@@ -242,11 +242,12 @@ RESPONSE:
 
 **My limits:** 7 per minute, 150 per day
 
-**Why those numbers and not others:**
+**Why those numbers and not others:** A real writer would not submit more than 5 genuine/qualitative articles per minute which is why 7 looks like a generous number per minute ; again, the writer would not submit more than 200 times  in a single day which is why 150 rate limit for a day looks more than generous
 <!-- Think about two people: a real writer submitting their own work a few
      times an hour, and a script sending a thousand variations to map your
      thresholds. Your numbers have to be liveable for the first and hostile to
      the second. -->
+
 
 **What a caller counts as:** <!-- per address, or per creator_id? They fail
 differently — one script can look like a thousand callers, and one household
@@ -257,6 +258,27 @@ can look like one. -->
 <!-- python run_attacks.py --flood 15 -->
 
 ```
+The first one is slow while the model loads.
+
+  [ 1/15] 200
+  [ 2/15] 200
+  [ 3/15] 200
+  [ 4/15] 200
+  [ 5/15] 200
+  [ 6/15] 200
+  [ 7/15] 200
+  [ 8/15] 429
+  [ 9/15] 429
+  [10/15] 429
+  [11/15] 429
+  [12/15] 429
+  [13/15] 429
+  [14/15] 429
+  [15/15] 429
+
+============================================================
+200 200 200 200 200 200 200 429 429 429 429 429 429 429 429
+============================================================
 
 ````
 
@@ -274,6 +296,28 @@ can look like one. -->
 <!-- Choose entries that show the interesting failures, not the ten easiest. -->
 
 ```json
+{"timestamp": "2026-11-05T00:26:17+00:00", "content_id": "dfb4ea0e-c109-4a7f-8f3b-a23c7abd1eb3", "creator_id": "attacker_FP02", "guess": "ai", "model_score": 0.7387, "style_score": 0.6588, "combined_score": 0.7, "label": "We think this was written by an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:17+00:00", "content_id": "7ec9481a-d902-46f7-b70e-efdbcc513d3d", "creator_id": "attacker_FP03", "guess": "ai", "model_score": 0.8051, "style_score": 0.6311, "combined_score": 0.72, "label": "We think this was written by an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:17+00:00", "content_id": "014b7519-c214-4d18-ae32-7f7ccaeb6d85", "creator_id": "attacker_FP04", "guess": "ai", "model_score": 0.8329, "style_score": 0.5882, "combined_score": 0.71, "label": "We think this was written by an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:17+00:00", "content_id": "c96ea99f-5ef6-4c18-9900-df6d839fba9b", "creator_id": "attacker_FP05", "guess": "ai", "model_score": 0.8005, "style_score": 0.6778, "combined_score": 0.74, "label": "We think this was written by an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:17+00:00", "content_id": "d099ba05-ca05-4197-a83b-b681d2d8d111", "creator_id": "attacker_FP06", "guess": "ai", "model_score": 0.8814, "style_score": 0.58, "combined_score": 0.73, "label": "We think this was written by an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:17+00:00", "content_id": "37df0a35-9658-4a58-96ba-608fdbdef321", "creator_id": "attacker_FP07", "guess": "ai", "model_score": 0.8816, "style_score": 0.6205, "combined_score": 0.75, "label": "We think this was written by an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:17+00:00", "content_id": "b8a7ee91-f569-4ed2-90fb-07dd9b70b6a0", "creator_id": "attacker_FP08", "guess": "human", "model_score": 0.3223, "style_score": 0.3771, "combined_score": 0.35, "label": "We think this was written by a person.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:17+00:00", "content_id": "12d9dcd5-cd80-4283-adb4-f253a408f0da", "creator_id": "attacker_PI01", "guess": "human", "model_score": 0.4625, "style_score": 0.4972, "combined_score": 0.48, "label": "We think this was written by a person.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:17+00:00", "content_id": "55267ea8-2fa8-48c7-931c-54cb3870bdfa", "creator_id": "attacker_PI02", "guess": "human", "model_score": 0.2044, "style_score": 0.4742, "combined_score": 0.34, "label": "We think this was written by a person.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:17+00:00", "content_id": "8bfd4599-8899-45cb-8ef6-8323ba7990e2", "creator_id": "attacker_PI03", "guess": "unsure", "model_score": 0.5943, "style_score": 0.5639, "combined_score": 0.58, "label": "We can't tell whether this was written by a person or an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:18+00:00", "content_id": "ab41e79f-1639-4f89-8949-3c265a7cfd0b", "creator_id": "attacker_PI04", "guess": "unsure", "model_score": 0.4998, "style_score": 0.5232, "combined_score": 0.51, "label": "We can't tell whether this was written by a person or an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:18+00:00", "content_id": "e79127da-d047-42ab-97bd-77604cbb1830", "creator_id": "attacker_PI05", "guess": "unsure", "model_score": 0.6401, "style_score": 0.3733, "combined_score": 0.51, "label": "We can't tell whether this was written by a person or an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:18+00:00", "content_id": "4f5a5c7f-3d8e-476e-885b-70aab87d9176", "creator_id": "attacker_PI06", "guess": "unsure", "model_score": 0.5583, "style_score": 0.606, "combined_score": 0.58, "label": "We can't tell whether this was written by a person or an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:18+00:00", "content_id": "d37632e2-f9a5-4ebd-9f52-09c6b2d4c0c1", "creator_id": "attacker_MF03", "guess": "human", "model_score": 0.0, "style_score": 0.4912, "combined_score": 0.25, "label": "We think this was written by a person.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:18+00:00", "content_id": "3f16553b-074b-4e33-8072-592581a4685d", "creator_id": "attacker_MF04", "guess": "human", "model_score": 0.0112, "style_score": 0.0, "combined_score": 0.01, "label": "We think this was written by a person.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:18+00:00", "content_id": "b1ed1523-ac8c-4d74-b187-1908680ff5fe", "creator_id": "attacker_MF05", "guess": "ai", "model_score": 0.9976, "style_score": 0.6667, "combined_score": 0.83, "label": "We think this was written by an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:19+00:00", "content_id": "4702a5e2-527f-46a6-9b7f-7f8231a99320", "creator_id": "attacker_MF06", "guess": "unsure", "model_score": 0.9969, "style_score": 0.0, "combined_score": 0.5, "label": "We can't tell whether this was written by a person or an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:19+00:00", "content_id": "72c5167f-1805-4611-967a-7e986835e14d", "creator_id": "attacker_MF07", "guess": "human", "model_score": 0.9064, "style_score": 0.0, "combined_score": 0.45, "label": "We think this was written by a person.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:19+00:00", "content_id": "b9ebb394-6079-476b-a3b7-e2b10bd7a966", "creator_id": "attacker_MF08", "guess": "ai", "model_score": 0.9876, "style_score": 0.8422, "combined_score": 0.91, "label": "We think this was written by an AI.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:19+00:00", "content_id": "4ef21960-d1ee-4d0f-938b-c0509f911a85", "creator_id": "attacker_flood", "guess": "human", "model_score": 0.0287, "style_score": 0.6312, "combined_score": 0.33, "label": "We think this was written by a person.", "status": "decided"}
+{"timestamp": "2026-11-05T00:26:19+00:00", "creator_id": "attacker_flood", "event": "rejected", "status": "rejected", "reason": "rate_limited", "limit": "7 per 1 minute"}
+{"timestamp": "2026-11-05T00:26:19+00:00", "creator_id": "attacker_flood", "event": "rejected", "status": "rejected", "reason": "rate_limited", "limit": "7 per 1 minute"}
 
 ````
 
@@ -287,19 +331,337 @@ whose work got caught by it:
 <!-- Your five criteria across three trials. `run_eval.py --label before`. -->
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
-| --------- | ------ | ----- | ----- | ----- | ------- |
-| 1.        |        |       |       |       |         |
-| 2.        |        |       |       |       |         |
-| 3.        |        |       |       |       |         |
-| 4.        |        |       |       |       |         |
-| 5.        |        |       |       |       |         |
+|---|---|---|---|---|---|
+| 1. My own writing flagged as AI | ≤ 1 of 10 | 0/10 | 0/10 | 0/10 | MET |
+| 2. All three labels reachable | 3 of 3 labels | 3/3 | 3/3 | 3/3 | MET |
+| 3. Valid appeals recorded; unknown IDs rejected | All valid appeals return 200 and log under_review; unknown IDs return 404 with no event | NOT RUN | NOT RUN | NOT RUN | NOT TESTED |
+| 4. Invalid and oversized text handled | Invalid inputs return 400; >100,000 chars returns 413 | 4/5 | 4/5 | 4/5 | MISSED |
+| 5. AI and human score separation | AI mean ≥ human mean + 0.20 | +0.096 | +0.096 | +0.096 | MISSED |
 
-**Real output from one trial**, pasted as text, naming the file and function
-that produced it:
+**Evidence source:** `results/run_2026-11-04_1947_before.md`, generated by `run_eval.py::main`; the submissions were handled by `app.py::submit`. The report contains no appeal requests or appeal responses, so criterion 3 was not tested.
 
+### Criterion 1 — own-writing submissions (trial 1)
 ```json
-
+[
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.26,
+    "model_score": 0.1027,
+    "style_score": 0.6462,
+    "label": "We think this was written by a person.",
+    "sent": "A wrong accusation can harm a real writer, so I want a low false-posit"
+  },
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.34,
+    "model_score": 0.0076,
+    "style_score": 0.6497,
+    "label": "We think this was written by a person.",
+    "sent": "Repeating the same ten pieces checks that small score variations do no"
+  },
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.18,
+    "model_score": 0.1503,
+    "style_score": 0.6657,
+    "label": "We think this was written by a person.",
+    "sent": "The unsure label gives the system a way to express doubt without makin"
+  },
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.26,
+    "model_score": 0.0927,
+    "style_score": 0.6515,
+    "label": "We think this was written by a person.",
+    "sent": "Requiring all three outcomes to be reachable checks that the threshold"
+  },
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.16,
+    "model_score": 0.1452,
+    "style_score": 0.6979,
+    "label": "We think this was written by a person.",
+    "sent": "A writer needs a dependable way to challenge a decision."
+  },
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.14,
+    "model_score": 0.1783,
+    "style_score": 0.6906,
+    "label": "We think this was written by a person.",
+    "sent": "Checking both the response and the append-only log makes the outcome v"
+  },
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.1,
+    "model_score": 0.2229,
+    "style_score": 0.6683,
+    "label": "We think this was written by a person.",
+    "sent": "Malformed requests should get a clear client error rather than a serve"
+  },
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.34,
+    "model_score": 0.0239,
+    "style_score": 0.6389,
+    "label": "We think this was written by a person.",
+    "sent": "The status and response field make each case straightforward to check."
+  },
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.32,
+    "model_score": 0.0408,
+    "style_score": 0.6424,
+    "label": "We think this was written by a person.",
+    "sent": "The system should show measurable separation on examples whose origins"
+  },
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.26,
+    "model_score": 0.124,
+    "style_score": 0.6228,
+    "label": "We think this was written by a person.",
+    "sent": "This is a calibration check, not proof that any individual score estab"
+  }
+]
 ```
+
+### Criterion 2 — label coverage (trial 1)
+```json
+[
+  {
+    "status": 200,
+    "guess": "unsure",
+    "confidence": 0.02,
+    "model_score": 0.4425,
+    "style_score": 0.5863,
+    "label": "We can't tell whether this was written by a person or an AI.",
+    "sent": "I left my keys beside the chipped blue mug, then spent ten minutes loo"
+  },
+  {
+    "status": 200,
+    "guess": "unsure",
+    "confidence": 0.08,
+    "model_score": 0.5255,
+    "style_score": 0.5629,
+    "label": "We can't tell whether this was written by a person or an AI.",
+    "sent": "The bus was late again, and nobody at the stop seemed surprised. I che"
+  },
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.34,
+    "model_score": 0.0227,
+    "style_score": 0.6286,
+    "label": "We think this was written by a person.",
+    "sent": "I have a confirmit survey where i have BG fields S_state_fips, S_state"
+  },
+  {
+    "status": 200,
+    "guess": "unsure",
+    "confidence": 0.02,
+    "model_score": 0.4678,
+    "style_score": 0.5469,
+    "label": "We can't tell whether this was written by a person or an AI.",
+    "sent": "The old notebook has a grocery list on one page and a half-finished id"
+  },
+  {
+    "status": 200,
+    "guess": "ai",
+    "confidence": 0.36,
+    "model_score": 0.8243,
+    "style_score": 0.5296,
+    "label": "We think this was written by an AI.",
+    "sent": "In today's rapidly evolving digital landscape, it is crucial to levera"
+  },
+  {
+    "status": 200,
+    "guess": "unsure",
+    "confidence": 0.08,
+    "model_score": 0.5746,
+    "style_score": 0.4981,
+    "label": "We can't tell whether this was written by a person or an AI.",
+    "sent": "This comprehensive overview explores the essential components of effec"
+  }
+]
+```
+
+### Criterion 3 — appeal path (trial 1)
+The report has only the seed submission below; it has no `POST /appeal` response or corresponding audit entry. This criterion remains untested.
+```json
+[
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.22,
+    "model_score": 0.1723,
+    "style_score": 0.6121,
+    "label": "We think this was written by a person.",
+    "sent": "I wrote this short note myself and want the decision reviewed. The poi"
+  }
+]
+```
+
+### Criterion 4 — invalid and oversized inputs (trial 1)
+```json
+[
+  {
+    "status": 400,
+    "guess": null,
+    "confidence": null,
+    "model_score": null,
+    "style_score": null,
+    "label": null,
+    "sent": "(empty text)"
+  },
+  {
+    "status": 400,
+    "guess": null,
+    "confidence": null,
+    "model_score": null,
+    "style_score": null,
+    "label": null,
+    "sent": "{\"creator_id\": \"eval_bad_missing\"}"
+  },
+  {
+    "status": 400,
+    "guess": null,
+    "confidence": null,
+    "model_score": null,
+    "style_score": null,
+    "label": null,
+    "sent": "{\"text\": null, \"creator_id\": \"eval_bad_null\"}"
+  },
+  {
+    "status": 400,
+    "guess": null,
+    "confidence": null,
+    "model_score": null,
+    "style_score": null,
+    "label": null,
+    "sent": "{\"text\": 42, \"creator_id\": \"eval_bad_non_string\"}"
+  },
+  {
+    "status": 200,
+    "guess": "ai",
+    "confidence": 0.66,
+    "model_score": 0.9976,
+    "style_score": 0.6667,
+    "label": "We think this was written by an AI.",
+    "sent": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  }
+]
+```
+
+The first four inputs returned HTTP 400. The 100,001-character input returned HTTP 200 instead of HTTP 413 in every trial.
+
+### Criterion 5 — human and AI score separation (trial 1)
+```json
+[
+  {
+    "status": 200,
+    "guess": "ai",
+    "confidence": 0.44,
+    "model_score": 0.7961,
+    "style_score": 0.6448,
+    "label": "We think this was written by an AI.",
+    "sent": "I missed the first bus, so I walked to the next stop. It was colder th"
+  },
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.16,
+    "model_score": 0.2247,
+    "style_score": 0.6086,
+    "label": "We think this was written by a person.",
+    "sent": "The cabinet door still sticks unless you lift it a little. Dad said he"
+  },
+  {
+    "status": 200,
+    "guess": "human",
+    "confidence": 0.06,
+    "model_score": 0.3227,
+    "style_score": 0.6131,
+    "label": "We think this was written by a person.",
+    "sent": "I tried the new recipe on Tuesday and added too much lemon. It was sti"
+  },
+  {
+    "status": 200,
+    "guess": "unsure",
+    "confidence": 0.08,
+    "model_score": 0.4746,
+    "style_score": 0.5974,
+    "label": "We can't tell whether this was written by a person or an AI.",
+    "sent": "There is a tiny crack in the corner of my phone screen. I keep meaning"
+  },
+  {
+    "status": 200,
+    "guess": "unsure",
+    "confidence": 0.1,
+    "model_score": 0.4321,
+    "style_score": 0.6721,
+    "label": "We can't tell whether this was written by a person or an AI.",
+    "sent": "We moved the table closer to the window because the room felt dark. No"
+  },
+  {
+    "status": 200,
+    "guess": "unsure",
+    "confidence": 0.28,
+    "model_score": 0.6612,
+    "style_score": 0.6261,
+    "label": "We can't tell whether this was written by a person or an AI.",
+    "sent": "In today's rapidly evolving digital landscape, organizations must embr"
+  },
+  {
+    "status": 200,
+    "guess": "unsure",
+    "confidence": 0.26,
+    "model_score": 0.7494,
+    "style_score": 0.5096,
+    "label": "We can't tell whether this was written by a person or an AI.",
+    "sent": "Effective communication is essential for success in any environment. B"
+  },
+  {
+    "status": 200,
+    "guess": "unsure",
+    "confidence": 0.3,
+    "model_score": 0.7983,
+    "style_score": 0.4974,
+    "label": "We can't tell whether this was written by a person or an AI.",
+    "sent": "This comprehensive guide explores the key principles of personal growt"
+  },
+  {
+    "status": 200,
+    "guess": "ai",
+    "confidence": 0.36,
+    "model_score": 0.8223,
+    "style_score": 0.5331,
+    "label": "We think this was written by an AI.",
+    "sent": "Technology continues to transform the way we live and work. By embraci"
+  },
+  {
+    "status": 200,
+    "guess": "unsure",
+    "confidence": 0.16,
+    "model_score": 0.7097,
+    "style_score": 0.4599,
+    "label": "We can't tell whether this was written by a person or an AI.",
+    "sent": "Achieving long-term success requires a thoughtful approach. By setting"
+  }
+]
+```
+
+Using the first five submissions as human and the last five as AI, the rounded combined-score means were 0.540 and 0.636, respectively. The difference was 0.096 in each trial, below the 0.20 target.
 
 **Diagnoses**
 
