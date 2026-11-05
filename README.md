@@ -665,19 +665,80 @@ Using the first five submissions as human and the last five as AI, the rounded c
 
 **Diagnoses**
 
-<!-- For each miss AND each broken attack: the stage and the mechanism.
+**Criterion 4 — oversized text was accepted.** The **stage is the route**. In
+all three trials, the 100,001-character request returned HTTP 200 instead of
+413. The route rejects missing, empty, and non-string text, but it has no
+maximum-length check, so the request proceeds to scoring and gets logged as a
+decision.
 
-     Your service has five stages: the route, signal one, signal two, the
-     combining rule, and the label mapping.
+**Criterion 5 — the score sets did not separate enough.** The **stages are
+signal one, signal two, and the combining rule**. In trial 1, a human example
+scored 0.7961 on the model signal and 0.6448 on the style signal, while several
+AI examples landed near or below the AI cutoff after combining. The two signals
+respond to predictability and writing shape, both of which overlap between the
+human and generated samples. Their equal-weight average left only a 0.096 mean
+difference, below the 0.20 target. The label mapping applied the configured
+cutoffs; it cannot recover separation the signals did not provide.
 
-     Not a diagnosis:  "The evasion attacks got through."
-     A diagnosis:      "Four evasion inputs got through. All four had typos
-                        added to AI-generated text. My second signal measures
-                        word variety, and typos raise word variety — so it read
-                        them as more human. My combining rule weights that
-                        signal at 0.6, so it dragged the whole score down."
+**False-positive attacks FP02–FP07.** The **stages are signal one, signal two,
+and the combining rule**. All six human-written formal, rubric-based,
+technical, templated, or deliberately repetitive examples crossed the AI
+cutoff, with combined scores from 0.70 to 0.75. Common phrasing made them
+predictable to the model signal, while regular sentence and vocabulary patterns
+looked AI-like to the style signal. Averaging both high readings pushed each
+over the label mapping's 0.66 cutoff. FP01 stayed unsure and FP08 was labeled
+human, so those two did not make a high-confidence false accusation.
 
-     Look for a pattern. Five failures on one signal is one problem, not five. -->
+**Evasion attacks EV01, EV04, and EV08.** The main **stage is signal one**;
+the **combining rule** then carries its low or middling scores into a human or
+unsure result. Typos and unusual word choices changed GPT-2's predictability
+reading (EV01 model score 0.1635; EV04 0.6114), and the very short EV08 sample
+gave the model little context (0.2452). The detector treats these perplexity
+changes as evidence about authorship even though they came from spelling,
+word choice, or length.
+
+**Evasion attacks EV02, EV03, EV06, EV07, and EV09.** The main **stage is
+signal two**, followed by the **combining rule**. Sentence breaks, a quotation,
+extreme sentence-length variation, punctuation changes, or a human-sounding
+opening changed features of the text's shape. Those edits can make a generated
+passage look less uniform to stylometry. The combined scores ended at 0.53–0.63,
+below the 0.66 AI cutoff, so the label became unsure rather than high-confidence
+AI. EV07 is a useful exception: its style score stayed AI-like at 0.6835, but
+the model score of 0.5862 pulled the average to 0.63.
+
+**Evasion attack EV05.** The **stages are both signals and the combining
+rule**. A heavy human editing pass changed both predictability and surface
+style; the model and style scores fell to 0.3212 and 0.5188. Their average
+became 0.42, which the label mapping correctly returned as high-confidence
+human for that score, even though the text originated as AI-generated.
+
+**Prompt-injection attacks PI01 and PI02.** The **stages are signal one and
+the combining rule**. The inserted instructions were included in the text that
+was scored. They did not execute as service commands, but familiar,
+instruction-like wording reduced the model scores to 0.4625 and 0.2044; the
+combined scores then landed in the human band. The label mapping followed
+those scores, allowing the prompt text to accompany a human classification.
+PI03 and PI06 remained unsure; PI04 did not replace the fixed label text, and
+PI05 did not add injected fields to the audit record.
+
+**Malformed attacks MF03–MF07.** The primary **stage is the route**. It checks
+that text is a non-empty string of sufficient length, but it accepts strings
+made only of controls, punctuation, one repeated character, emoji, or
+right-to-left script. The **signal-two mechanism** compounds this: its word
+extractor recognizes only ASCII letters and digits, so punctuation, emoji, and
+the right-to-left sample can produce a zero style score. The combining rule
+then averages that zero with the model score; for example, the right-to-left
+text's 0.9064 model score and 0.0 style score combined to 0.45 and received a
+high-confidence human label. Control and punctuation-only submissions were
+also classified instead of rejected. The 60,000-character MF08 input was below
+the stated 100,000-character limit, so its HTTP 200 is not a failure of that
+size-limit criterion.
+
+Criterion 3 is **not diagnosed** because the before evaluation did not send an
+appeal. The other recorded checks held for their stated target: the malformed
+request cases returned 400, the flood was limited after seven submissions,
+EV10 remained high-confidence AI, and the remaining prompt-injection cases did
+not produce the requested label or log change.
 
 ---
 
